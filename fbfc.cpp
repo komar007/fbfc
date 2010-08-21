@@ -15,7 +15,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	if (argc != 3 && argc != 2) {
-		fprintf(stderr, "Fast brainfuck translator\n"
+		fprintf(stderr, "Fast brainfuck compiler\n"
 				"usage:\n"
 				"\t%s <infile.bf> [<outfile>]\n", argv[0]);
 		exit(0);
