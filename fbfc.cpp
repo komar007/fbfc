@@ -77,5 +77,10 @@ int main(int argc, char* argv[])
 	sprintf(inv, "strip %s", outbin);
 	(void)system(inv);
 
+	if (remove(outf) != 0) {
+		fprintf(stderr, "error removing temporary file %s; %s\n",
+				outf, strerror(errno));
+		exit(-1);
+	}
 	return 0;
 }
