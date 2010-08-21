@@ -42,19 +42,31 @@ int main(int argc, char* argv[])
 	fprintf(out, "%s\n", header);
 	fprintf(out, "%s\n", main_begin);
 	int c;
-	while ((c = fgetc(fp)) != EOF) {
+	int num_inc = 0,
+	    num_move = 0;
+	do {
+		c = fgetc(fp);
+		// on EOF series of '+', '-', '>', '<' will be ended
+		if (c == '+' || c == '-') {
+			num_inc += c == '+' ? 1 : -1;
+		} else if (num_inc != 0) {
+			fprintf(out, "*p+=%i;", num_inc);
+			num_inc = 0;
+		}
+		if (c == '>' || c == '<') {
+			num_move += c == '>' ? 1 : -1;
+		} else if (num_move != 0) {
+			fprintf(out, "p+=%i;", num_move);
+			num_move = 0;
+		}
 		switch (c) {
-		case '+': fprintf(out, "++*p;");           break;
-		case '-': fprintf(out, "--*p;");           break;
-		case '>': fprintf(out, "++p;");            break;
-		case '<': fprintf(out, "--p;");            break;
 		case '[': fprintf(out, "while(*p){");      break;
 		case ']': fprintf(out, "}");               break;
 		case ',': fprintf(out, "if ((c=getchar())!=EOF)*p=c;"); break;
 		case '.': fprintf(out, "putchar(*p);");    break;
 		default: break;
 		}
-	}
+	} while (c != EOF);
 	fclose(fp);
 	fprintf(out, "%s\n", main_end);
 	fclose(out);
